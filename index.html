@@ -3,9 +3,10 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="index.css?v=1">
   <title>Shopping</title>
-
-  <style>
+</head>
+<style>
     * {
       margin: 0;
       padding: 0;
@@ -14,74 +15,68 @@
     }
 
     body {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
+      background-color: #f5f5f5;
+      padding-top: 80px; /* باش ما يتغطاش المحتوى بالهيدر */
     }
 
+    /* 📌 Header */
     header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 70px;
       background-color: rgba(0, 0, 0, 0.7);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 10px 20px;
-      color: white;
-      flex-wrap: wrap;
+      padding: 0 20px;
+      z-index: 1000;
+    }
+
+    .head {
+      color: #ffffff;
+      text-decoration: none;
+      margin-left: 20px;
+      font-weight: 600;
+      transition: color 0.3s ease;
+    }
+
+    .head:hover {
+      color: #ddd;
     }
 
     .logo {
-      height: 50px;
+      width: 180px;
+      height: 70px;
+      object-fit: contain;
       cursor: pointer;
     }
 
     nav {
       display: flex;
       align-items: center;
-      gap: 15px;
-      flex-wrap: wrap;
     }
 
-    .head {
-      color: white;
-      text-decoration: none;
-      font-weight: 500;
-      transition: color 0.3s ease;
-    }
-
-    .head:hover {
-      color: #ccc;
-    }
-
-    main {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 20px 20px; /* كانت 40px */
-      text-align: center;
-    }
-
-
+    /* 📌 Category Cards */
     .category-cards {
       display: flex;
       justify-content: center;
       gap: 60px;
-      margin-top: 20px; /* كانت 40px */
+      margin: 40px 20px;
       flex-wrap: wrap;
     }
 
-
     .category-card {
-      width: 230px;
-      height: 390px;
-      background-color: #f0f0f0;
-      border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-      padding: 20px;
-      cursor: pointer;
-      transition: transform 0.3s ease;
+      width: 250px;
+      height: 400px;
+      background-color: #ddd;
+      border-radius: 10px;
       text-align: center;
+      padding: 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      transition: transform 0.3s;
     }
 
     .category-card:hover {
@@ -89,97 +84,72 @@
     }
 
     .category-card img {
-      width: 100%;
-      height: 310px;
+      width: 200px;
+      height: 350px;
+      border-radius: 10px;
       object-fit: cover;
-      border-radius: 8px;
     }
-    
+
     .category-card h3 {
       margin-top: 15px;
-      font-size: 18px;
-      color: #222;
+      font-size: 20px;
+      color: #333;
+      margin-top: -5px;
     }
 
+    /* 📌 Footer */
     footer {
-      height: 50px;
-      background-color: rgba(0, 0, 0, 0.5);
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 14px;
-      font-weight: 500;
-      margin-top: -20px; /* يخليه يطلع الفوق */
+    background-color: rgba(0, 0, 0, 0.5);
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+    font-size: 14px;
+    font-weight: 500;
     }
 
-
+    /* 📱 Responsive */
     @media (max-width: 768px) {
-      header {
+      .category-cards {
         flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
-      }
-
-      nav {
-        justify-content: center;
-        width: 100%;
-        flex-wrap: wrap;
-        gap: 10px;
+        align-items: center;
+        gap: 30px;
       }
 
       .category-card {
-        width: 80%;
+        width: 90%;
         height: auto;
-        padding: 15px;
       }
 
       .category-card img {
-        height: auto;
-        max-height: 250px;
-      }
-    }
-
-    @media (max-width: 480px) {
-      .category-card {
         width: 100%;
-      }
-
-      main {
-        padding: 20px 10px;
-      }
-
-      .category-card h3 {
-        font-size: 16px;
+        height: auto;
       }
     }
-  </style>
-</head>
+</style>
 <body>
 
+  <!-- 📌 Header -->
   <header>
     <img src="img/Frame_1-removebg-preview.png" alt="Logo" class="logo" onclick="window.location.href='index.html'">
     <nav>
       <a href="index.html" class="head">Home</a>
-      <a href="about.html" class="head">About</a>
       <a href="contact.html" class="head">Contact</a>
     </nav>
   </header>
 
-  <main>
-    <h1>Select a category</h1>
-    <div class="category-cards">
-      <div class="category-card" onclick="window.location.href='femme.php'">
-        <img src="img/femme.jpg" alt="Femme" />
-        <h3>Femme</h3>
-      </div>
-      <div class="category-card" onclick="window.location.href='homme.php'">
-        <img src="img/homme.jpg" alt="Homme" />
-        <h3>Homme</h3>
-      </div>
+  <!-- 📌 Category Cards -->
+  <div class="category-cards">
+    <div class="category-card" onclick="window.location.href='homme.php'">
+      <img src="img/homme.jpg" alt="Homme" />
+      <h3>Homme</h3>
     </div>
-  </main>
-  
+    <div class="category-card" onclick="window.location.href='femme.php'">
+      <img src="img/femme.jpg" alt="Femme" />
+      <h3>Femme</h3>
+    </div>
+  </div>
+
+  <!-- 📌 Footer -->
   <footer>
     <p>© 2025 Your Company. All rights reserved.</p>
   </footer>
