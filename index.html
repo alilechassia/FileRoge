@@ -58,21 +58,23 @@
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 40px 20px;
+      padding: 20px 20px; /* كانت 40px */
       text-align: center;
     }
+
 
     .category-cards {
       display: flex;
       justify-content: center;
-      gap: 40px;
-      margin-top: 30px;
+      gap: 60px;
+      margin-top: 20px; /* كانت 40px */
       flex-wrap: wrap;
     }
 
+
     .category-card {
-      width: 250px;
-      height: 400px;
+      width: 230px;
+      height: 390px;
       background-color: #f0f0f0;
       border-radius: 12px;
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -88,11 +90,11 @@
 
     .category-card img {
       width: 100%;
-      height: 300px;
+      height: 0px;
       object-fit: cover;
       border-radius: 8px;
     }
-
+    
     .category-card h3 {
       margin-top: 15px;
       font-size: 18px;
@@ -108,8 +110,9 @@
       justify-content: center;
       font-size: 14px;
       font-weight: 500;
-      margin-top: auto;
+      margin-top: -20px; /* يخليه يطلع الفوق */
     }
+
 
     @media (max-width: 768px) {
       header {
@@ -176,7 +179,7 @@
       </div>
     </div>
   </main>
-
+  
   <footer>
     <p>© 2025 Your Company. All rights reserved.</p>
   </footer>
