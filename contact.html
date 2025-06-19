@@ -8,16 +8,49 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
     * {
+      margin: 0;
+      padding: 0;
       box-sizing: border-box;
+      font-family: 'Poppins', sans-serif;
     }
 
     body {
-      font-family: 'Poppins', sans-serif;
-      background: #ffffff;
-      color: #333;
-      margin: 0;
-      padding: 0;
-      text-align: center;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      background-color: rgba(49, 48, 48, 0.7);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 20px;
+      color: white;
+      flex-wrap: wrap;
+    }
+
+    .logo {
+      height: 50px;
+      cursor: pointer;
+    }
+
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+
+    .head {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+
+    .head:hover {
+      color: #ccc;
     }
 
     h1 {
@@ -29,7 +62,6 @@
     .contact-container {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-
       gap: 20px;
       padding: 30px 20px;
       max-width: 1000px;
@@ -93,31 +125,42 @@
   </style>
 </head>
 <body>
-  <h1>Contact Us</h1>
-  <div class="contact-container" id="contact-list"></div>
 
-  <script>
-    const contacts = [
-      { name: "Phone / WhatsApp", value: "+212638417033", link: "tel:+212638417033", icon: "fas fa-phone" },
-      { name: "Email", value: "assiaalilech07@gmail.com", link: "mailto:assiaalilech07@gmail.com", icon: "fas fa-envelope" },
-      { name: "Instagram", value: "@assia__alilech_09", link: "https://www.instagram.com/assia__alilech_09/", icon: "fab fa-instagram" },
-      { name: "Facebook", value: "Assia Alilech", link: "https://facebook.com/example", icon: "fab fa-facebook" }
-    ];
+<header>
+    <img src="img/Frame_1-removebg-preview.png" alt="Logo" class="logo" onclick="window.location.href='index.html'">
+    <nav>
+      <a href="index.html" class="head">Home</a>
+      <a href="about.html" class="head">About</a>
+      <a href="contact.html" class="head">Contact</a>
+    </nav>
+</header>
 
-    const container = document.getElementById("contact-list");
+<h1>Contact Us</h1>
+<div class="contact-container" id="contact-list"></div>
 
-    contacts.forEach(contact => {
-      const card = document.createElement("div");
-      card.className = "contact-card";
-      card.setAttribute("aria-label", contact.name);
-      card.innerHTML = `
-        <i class="${contact.icon}"></i>
-        <h3>${contact.name}</h3>
-        <p>${contact.value}</p>
-      `;
-      card.onclick = () => window.open(contact.link, "_blank");
-      container.appendChild(card);
-    });
-  </script>
+<script>
+  const contacts = [
+    { name: "Phone / WhatsApp", value: "+212638417033", link: "tel:+212638417033", icon: "fas fa-phone" },
+    { name: "Email", value: "assiaalilech07@gmail.com", link: "mailto:assiaalilech07@gmail.com", icon: "fas fa-envelope" },
+    { name: "Instagram", value: "@assia__alilech_09", link: "https://www.instagram.com/assia__alilech_09/", icon: "fab fa-instagram" },
+    { name: "Facebook", value: "Assia Alilech", link: "https://facebook.com/example", icon: "fab fa-facebook" }
+  ];
+
+  const container = document.getElementById("contact-list");
+
+  contacts.forEach(contact => {
+    const card = document.createElement("div");
+    card.className = "contact-card";
+    card.setAttribute("aria-label", contact.name);
+    card.innerHTML = `
+      <i class="${contact.icon}"></i>
+      <h3>${contact.name}</h3>
+      <p>${contact.value}</p>
+    `;
+    card.onclick = () => window.open(contact.link, "_blank");
+    container.appendChild(card);
+  });
+</script>
+
 </body>
 </html>
