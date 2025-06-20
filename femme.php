@@ -8,16 +8,19 @@ $price_filter = isset($_GET['prix_filter']) ? trim($_GET['prix_filter']) : '';
 $sql = "SELECT * FROM produits WHERE genre = 'femme'"; // Changed genre to 'femme'
 $params = [];
 
+// Filtre par nom
 if (!empty($search)) {
     $sql .= " AND nom LIKE :search";
     $params['search'] = '%' . $search . '%';
 }
 
+// Filtre par taille
 if (!empty($size)) {
     $sql .= " AND FIND_IN_SET(:taille, taille)";
     $params['taille'] = $size;
 }
 
+// Filtre par prix
 if ($price_filter === 'moins_100') {
     $sql .= " AND prix < 100";
 } elseif ($price_filter === 'plus_100') {
@@ -42,7 +45,6 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
             font-family: 'Poppins', sans-serif;
         }
 
-        /* Style de la vidéo en arrière-plan */
         .background-video {
             position: absolute;
             top: 0;
@@ -53,7 +55,6 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
             z-index: -1;
         }
 
-        /* Style du header */
         header {
             position: absolute;
             top: 0;
@@ -78,7 +79,6 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
             height: 70px;
         }
 
-        /* Style du contenu */
         .content {
             position: relative;
             z-index: 1; 
@@ -87,14 +87,13 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
             padding-top: 150px;
         }
 
-        /* Style des produits */
         .produits {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             gap: 20px;
             padding: 20px;
-            padding-top: 250px; /* Ajoute cet espace pour descendre les produits */
-            margin-top: 400px; /* Tu peux ajuster si nécessaire */
+            padding-top: 250px;
+            margin-top: 400px;
         }
 
         .produit {
@@ -111,10 +110,9 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
             width: 100%;
             height: 300px;
             object-fit: cover;
-            transition: opacity 0.3s ease; /* تأثير ناعم عند التبديل */
+            transition: opacity 0.3s ease; 
         }
 
-        /* صورة hover تكون مخفية في البداية */
         .product-hover-image {
             position: absolute;
             top: 0;
@@ -122,17 +120,16 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
             width: 100%;
             height: 100%;
             object-fit: cover;
-            opacity: 0; /* إخفاء الصورة */
+            opacity: 0; 
             transition: opacity 0.3s ease;
         }
 
-        /* عند تمرير الفأرة، تختفي الصورة الأصلية وتظهر صورة hover */
         .produit:hover img:first-child {
-            opacity: 0; /* إخفاء الصورة الأصلية */
+            opacity: 0; 
         }
 
         .produit:hover .product-hover-image {
-            opacity: 1; /* إظهار صورة hover */
+            opacity: 1; 
         }
     </style>
 </head>
@@ -151,28 +148,34 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
     </header>
 
-    <form method="GET" action="femme.php" style="text-align:center; margin: 30px 0; position: relative; z-index: 10;">
-        <input type="text" name="search" placeholder="Search products..."
-            value="<?= htmlspecialchars($search); ?>"
-            style="padding: 10px; width: 200px; border-radius: 8px; border: 1px solid #ccc;" />
+    <!-- Formulaire de filtre des produits -->
+  <form method="GET" action="homme.php" style="text-align:center; margin: 30px 0; position: relative; z-index: 10;">
 
-        <select name="taille" style="padding: 10px; border-radius: 8px; margin-left: 10px;">
-            <option value="">All sizes</option>
-            <option value="L" <?= $size == 'L' ? 'selected' : '' ?>>L</option>
-            <option value="XL" <?= $size == 'XL' ? 'selected' : '' ?>>XL</option>
-            <option value="XXL" <?= $size == 'XXL' ? 'selected' : '' ?>>XXL</option>
-        </select>
+    <!-- recherche par nom -->
+    <input type="text" name="search" placeholder="Rechercher des produits..."
+        value="<?= htmlspecialchars($search); ?>"
+        style="padding: 10px; width: 200px; border-radius: 8px; border: 1px solid #ccc;" />
 
-        <select name="prix_filter" style="padding: 10px; border-radius: 8px; margin-left: 10px;">
-            <option value="">All prices</option>
-            <option value="moins_100" <?= $price_filter == 'moins_100' ? 'selected' : '' ?>>Price < 100 MAD</option>
-            <option value="plus_100" <?= $price_filter == 'plus_100' ? 'selected' : '' ?>>Price ≥ 100 MAD</option>
-        </select>
+    <!-- filtrer par taille -->
+    <select name="taille" style="padding: 10px; border-radius: 8px; margin-left: 10px;">
+        <option value="">Toutes les tailles</option>
+        <option value="L" <?= $size == 'L' ? 'selected' : '' ?>>L</option>
+        <option value="XL" <?= $size == 'XL' ? 'selected' : '' ?>>XL</option>
+        <option value="XXL" <?= $size == 'XXL' ? 'selected' : '' ?>>XXL</option>
+    </select>
 
-        <button type="submit" style="padding: 10px 20px; border: none; border-radius: 8px; background-color: #333; color: white;">
-            Filter
-        </button>
-    </form>
+    <!--  filtrer par prix -->
+    <select name="prix_filter" style="padding: 10px; border-radius: 8px; margin-left: 10px;">
+        <option value="">Tous les prix</option>
+        <option value="moins_100" <?= $price_filter == 'moins_100' ? 'selected' : '' ?>>Prix < 100 MAD</option>
+        <option value="plus_100" <?= $price_filter == 'plus_100' ? 'selected' : '' ?>>Prix ≥ 100 MAD</option>
+    </select>
+
+    <!-- Bouton pour soumettre les filtres -->
+    <button type="submit" style="padding: 10px 20px; border: none; border-radius: 8px; background-color: #333; color: white;">
+        Filtrer
+    </button>
+</form>
 
     <div class="content">
         <h1>Welcome to our shop</h1>
