@@ -186,15 +186,25 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
         <?php if (count($products) > 0): ?>
             <?php foreach ($products as $row): ?>
                 <div class="produit">
+
+                  <!-- Image principale du produit -->
                     <img src="<?= htmlspecialchars($row['image_url']) ?>" alt="<?= htmlspecialchars($row['nom']) ?>" />
                     <?php if (!empty($row['image_hover'])): ?>
+
+                      <!-- Image hover -->
                         <img class="product-hover-image" src="<?= htmlspecialchars($row['image_hover']) ?>" alt="hover image" />
                     <?php endif; ?>
+
+                    <!-- Nom du produit -->
                     <h3><?= htmlspecialchars($row['nom']) ?></h3>
+
+                    <!-- Lien vers la page de détails du produit -->
                     <a href="details.php?produit_id=<?= htmlspecialchars($row['id']) ?>" style="color:blue; text-decoration:underline;">More details</a>
                 </div>
             <?php endforeach; ?>
         <?php else: ?>
+          
+          <!-- Message affiché s’il n’y a aucun produit -->
             <p style="text-align:center;">No products found.</p>
         <?php endif; ?>
     </div>
