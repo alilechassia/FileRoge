@@ -1,21 +1,22 @@
 <?php
 require 'connect.php';
 
+// supprimer une commande
 if (isset($_GET['delete'])) {
     $commande_id = intval($_GET['delete']);
 
-    // First, delete the order details
+    // supprimer les détails de la commande
     $deleteDetails = $conn->prepare("DELETE FROM details_commande WHERE commande_id = :commande_id");
     $deleteDetails->bindParam(':commande_id', $commande_id, PDO::PARAM_INT);
     $deleteDetails->execute();
 
-    // Then, delete the order itself
+    // supprimer la commande elle-même
     $deleteCommande = $conn->prepare("DELETE FROM commandes WHERE id = :commande_id");
     $deleteCommande->bindParam(':commande_id', $commande_id, PDO::PARAM_INT);
     $deleteCommande->execute();
 }
 
-// 📌 Fetch all orders
+// récupérer et afficher toutes les commandes
 $sql = "SELECT * FROM commandes ORDER BY id DESC";
 $stmt = $conn->prepare($sql);
 $stmt->execute();
@@ -40,11 +41,15 @@ $commandes = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <th>Date</th>
                 <th>Actions</th>
             </tr>
+
+             <!-- afficher chaque commande -->
             <?php foreach ($commandes as $commande): ?>
                 <tr>
                     <td><?= htmlspecialchars($commande['id']) ?></td>
                     <td><?= htmlspecialchars($commande['date_commande']) ?></td>
                     <td>
+
+                    <!-- voir les détails ou supprimer -->
                         <a href="details.php?commande_id=<?= $commande['id'] ?>">View details</a> |
                         <a class="btn-danger" href="commandes.php?delete=<?= $commande['id'] ?>" onclick="return confirm('Are you sure you want to delete this order?')">Delete</a>
                     </td>
