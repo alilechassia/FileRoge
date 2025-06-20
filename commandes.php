@@ -27,9 +27,43 @@ $commandes = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <head>
     <meta charset="UTF-8">
      <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="commandes.css">
     <title>Order List</title>
 </head>
+<style>
+    body {
+            font-family: Arial, sans-serif;
+            padding: 30px;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #999;
+            padding: 12px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        a {
+            text-decoration: none;
+            color: #007BFF;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .btn-danger {
+            color: red;
+        }
+</style>
 <body>
 
     <h1>Order List</h1>
