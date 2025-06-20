@@ -4,6 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Contact Us</title>
+
+   <!-- Polices et icônes -->
   <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <style>
@@ -152,7 +154,7 @@
     </nav>
   </header>
 
-  <!-- Content -->
+  <!-- Titre -->
   <h1>Contact Us</h1>
   <div class="contact-container" id="contact-list"></div>
 
@@ -161,29 +163,42 @@
     <p>© 2025 MyElegence. All rights reserved.</p>
   </footer>
 
+  <!-- Script pour générer les contacts -->
   <script>
-    const contacts = [
-      { name: "Phone / WhatsApp", value: "+212638417033", link: "tel:+212638417033", icon: "fas fa-phone" },
-      { name: "Email", value: "assiaalilech07@gmail.com", link: "mailto:assiaalilech07@gmail.com", icon: "fas fa-envelope" },
-      { name: "Instagram", value: "@assia__alilech_09", link: "https://www.instagram.com/assia__alilech_09/", icon: "fab fa-instagram" },
-      { name: "Facebook", value: "Assia Alilech", link: "https://facebook.com/example", icon: "fab fa-facebook" }
-    ];
+  // Liste des contacts à afficher avec leurs infos (nom, valeur, lien, icône)
+  const contacts = [
+    { name: "Phone / WhatsApp", value: "+212638417033", link: "tel:+212638417033", icon: "fas fa-phone" },
+    { name: "Email", value: "assiaalilech07@gmail.com", link: "mailto:assiaalilech07@gmail.com", icon: "fas fa-envelope" },
+    { name: "Instagram", value: "@assia__alilech_09", link: "https://www.instagram.com/assia__alilech_09/", icon: "fab fa-instagram" },
+    { name: "Facebook", value: "Assia Alilech", link: "https://facebook.com/example", icon: "fab fa-facebook" }
+  ];
 
-    const container = document.getElementById("contact-list");
+  // Sélection du conteneur HTML où les cartes seront insérées
+  const container = document.getElementById("contact-list");
 
-    contacts.forEach(contact => {
-      const card = document.createElement("div");
-      card.className = "contact-card";
-      card.setAttribute("aria-label", contact.name);
-      card.innerHTML = `
-        <i class="${contact.icon}"></i>
-        <h3>${contact.name}</h3>
-        <p>${contact.value}</p>
-      `;
-      card.onclick = () => window.open(contact.link, "_blank");
-      container.appendChild(card);
-    });
-  </script>
+  // Boucle sur chaque contact pour créer une carte
+  contacts.forEach(contact => {
+    // Création d’un élément div pour la carte
+    const card = document.createElement("div");
+    card.className = "contact-card"; // Ajout de la classe CSS
+
+    // Ajout d’une étiquette accessible (aria-label)
+    card.setAttribute("aria-label", contact.name);
+
+    // Insertion du contenu HTML dans la carte (icône, titre, valeur)
+    card.innerHTML = `
+      <i class="${contact.icon}"></i>
+      <h3>${contact.name}</h3>
+      <p>${contact.value}</p>
+    `;
+
+    // Action au clic : ouvrir le lien dans un nouvel onglet
+    card.onclick = () => window.open(contact.link, "_blank");
+
+    // Ajout de la carte dans le conteneur principal
+    container.appendChild(card);
+  });
+</script>
 
 </body>
 </html>
