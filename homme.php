@@ -1,46 +1,34 @@
 <?php
-// Inclut le fichier de connexion à la base de données.
 require 'connect.php';
 
-// --- Récupération et Nettoyage des Paramètres de Recherche ---
-// Vérifie si un terme de recherche est présent dans l'URL (via GET) et le nettoie.
 $search = isset($_GET['search']) ? trim($_GET['search']) : '';
-// Vérifie si une taille est présente dans l'URL et la nettoie.
 $size = isset($_GET['taille']) ? trim($_GET['taille']) : '';
-// Vérifie si un filtre de prix est présent dans l'URL et le nettoie.
 $price_filter = isset($_GET['prix_filter']) ? trim($_GET['prix_filter']) : '';
 
-// --- Construction de la Requête SQL ---
-// Initialise la requête SQL pour sélectionner les produits de genre 'homme'.
 $sql = "SELECT * FROM produits WHERE genre = 'homme'";
-// Initialise un tableau pour stocker les paramètres de la requête préparée.
 $params = [];
 
-// Ajoute une condition de recherche par nom si un terme de recherche est fourni.
+// Filtre par nom
 if (!empty($search)) {
     $sql .= " AND nom LIKE :search";
-    $params['search'] = '%' . $search . '%'; // Utilise % pour la recherche partielle.
+    $params['search'] = '%' . $search . '%';
 }
 
-// Ajoute une condition de filtre par taille si une taille est sélectionnée.
+// Filtre par taille
 if (!empty($size)) {
-    $sql .= " AND FIND_IN_SET(:taille, taille)"; // FIND_IN_SET est utile pour les colonnes contenant des listes de valeurs.
+    $sql .= " AND FIND_IN_SET(:taille, taille)";
     $params['taille'] = $size;
 }
 
-// Ajoute des conditions de filtre par prix.
+// Filtre par prix
 if ($price_filter === 'moins_100') {
     $sql .= " AND prix < 100";
 } elseif ($price_filter === 'plus_100') {
     $sql .= " AND prix >= 100";
 }
 
-// --- Exécution de la Requête Préparée ---
-// Prépare la requête SQL pour éviter les injections SQL.
 $stmt = $conn->prepare($sql);
-// Exécute la requête avec les paramètres liés.
 $stmt->execute($params);
-// Récupère tous les résultats de la requête sous forme de tableau associatif.
 $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <!DOCTYPE html>
@@ -160,28 +148,35 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
     </header>
 
-    <form method="GET" action="homme.php" style="text-align:center; margin: 30px 0; position: relative; z-index: 10;">
-        <input type="text" name="search" placeholder="Search products..."
-            value="<?= htmlspecialchars($search); ?>"
-            style="padding: 10px; width: 200px; border-radius: 8px; border: 1px solid #ccc;" />
+    <!-- Formulaire de filtre des produits -->
+  <form method="GET" action="homme.php" style="text-align:center; margin: 30px 0; position: relative; z-index: 10;">
 
-        <select name="taille" style="padding: 10px; border-radius: 8px; margin-left: 10px;">
-            <option value="">All sizes</option>
-            <option value="L" <?= $size == 'L' ? 'selected' : '' ?>>L</option>
-            <option value="XL" <?= $size == 'XL' ? 'selected' : '' ?>>XL</option>
-            <option value="XXL" <?= $size == 'XXL' ? 'selected' : '' ?>>XXL</option>
-        </select>
+    <!-- recherche par nom -->
+    <input type="text" name="search" placeholder="Rechercher des produits..."
+        value="<?= htmlspecialchars($search); ?>"
+        style="padding: 10px; width: 200px; border-radius: 8px; border: 1px solid #ccc;" />
 
-        <select name="prix_filter" style="padding: 10px; border-radius: 8px; margin-left: 10px;">
-            <option value="">All prices</option>
-            <option value="moins_100" <?= $price_filter == 'moins_100' ? 'selected' : '' ?>>Price < 100 MAD</option>
-            <option value="plus_100" <?= $price_filter == 'plus_100' ? 'selected' : '' ?>>Price ≥ 100 MAD</option>
-        </select>
+    <!-- filtrer par taille -->
+    <select name="taille" style="padding: 10px; border-radius: 8px; margin-left: 10px;">
+        <option value="">Toutes les tailles</option>
+        <option value="L" <?= $size == 'L' ? 'selected' : '' ?>>L</option>
+        <option value="XL" <?= $size == 'XL' ? 'selected' : '' ?>>XL</option>
+        <option value="XXL" <?= $size == 'XXL' ? 'selected' : '' ?>>XXL</option>
+    </select>
 
-        <button type="submit" style="padding: 10px 20px; border: none; border-radius: 8px; background-color: #333; color: white;">
-            Filter
-        </button>
-    </form>
+    <!--  filtrer par prix -->
+    <select name="prix_filter" style="padding: 10px; border-radius: 8px; margin-left: 10px;">
+        <option value="">Tous les prix</option>
+        <option value="moins_100" <?= $price_filter == 'moins_100' ? 'selected' : '' ?>>Prix < 100 MAD</option>
+        <option value="plus_100" <?= $price_filter == 'plus_100' ? 'selected' : '' ?>>Prix ≥ 100 MAD</option>
+    </select>
+
+    <!-- Bouton pour soumettre les filtres -->
+    <button type="submit" style="padding: 10px 20px; border: none; border-radius: 8px; background-color: #333; color: white;">
+        Filtrer
+    </button>
+</form>
+
 
     <div class="content">
         <h1>Welcome to our shop</h1>
@@ -190,15 +185,12 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
     <div class="produits">
         <?php
-        // Vérifie si des produits ont été trouvés dans la base de données.
         if (count($products) > 0):
-            // Boucle à travers chaque produit pour l'afficher.
             foreach ($products as $row):
         ?>
                 <div class="produit">
                     <img src="<?= htmlspecialchars($row['image_url']) ?>" alt="<?= htmlspecialchars($row['nom']) ?>" />
                     <?php
-                    // Affiche l'image de survol (hover) si elle existe.
                     if (!empty($row['image_hover'])):
                     ?>
                         <img class="product-hover-image" src="<?= htmlspecialchars($row['image_hover']) ?>" alt="hover image" />
