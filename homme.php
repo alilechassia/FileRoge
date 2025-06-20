@@ -178,34 +178,46 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </form>
 
 
-    <div class="content">
-        <h1>Welcome to our shop</h1>
-        <p>Discover the best deals</p>
-    </div>
+   <!-- Section de bienvenue avec un titre et un sous-titre -->
+<div class="content">
+    <h1>Welcome to our shop</h1>
+    <p>Discover the best deals</p>
+</div>
 
-    <div class="produits">
-        <?php
-        if (count($products) > 0):
-            foreach ($products as $row):
-        ?>
-                <div class="produit">
-                    <img src="<?= htmlspecialchars($row['image_url']) ?>" alt="<?= htmlspecialchars($row['nom']) ?>" />
-                    <?php
-                    if (!empty($row['image_hover'])):
-                    ?>
-                        <img class="product-hover-image" src="<?= htmlspecialchars($row['image_hover']) ?>" alt="hover image" />
-                    <?php endif; ?>
-                    <h3><?= htmlspecialchars($row['nom']) ?></h3>
-                    <a href="details.php?produit_id=<?= htmlspecialchars($row['id']) ?>" style="color:blue; text-decoration:underline;">More details</a>
-                </div>
-        <?php
-            endforeach;
-        else:
-        ?>
-            <p style="text-align:center;">No products found.</p>
-        <?php endif; ?>
-    </div>
+<div class="produits">
+    <?php
+    if (count($products) > 0):
+        foreach ($products as $row):
+    ?>
+            <div class="produit">
+                <!-- Image principale du produit -->
+                <img src="<?= htmlspecialchars($row['image_url']) ?>" alt="<?= htmlspecialchars($row['nom']) ?>" />
+                
+                <?php
+                if (!empty($row['image_hover'])):
+                ?>
+                    <!-- Image hover -->
+                    <img class="product-hover-image" src="<?= htmlspecialchars($row['image_hover']) ?>" alt="hover image" />
+                <?php endif; ?>
+                
+                <!-- Nom du produit -->
+                <h3><?= htmlspecialchars($row['nom']) ?></h3>
+                
+                <!-- Lien vers la page de détails du produit -->
+                <a href="details.php?produit_id=<?= htmlspecialchars($row['id']) ?>" style="color:blue; text-decoration:underline;">
+                    More details
+                </a>
+            </div>
+    <?php
+        endforeach;
+    else:
+    ?>
+        <!-- Message affiché s’il n’y a aucun produit -->
+        <p style="text-align:center;">No products found.</p>
+    <?php endif; ?>
+  </div>
 
+<!-- Footer -->
     <footer style="background-color: rgba(49, 48, 48, 0.7); color: white; font-size: 14px; align-items: center; height: 50px; justify-content: center; font-weight: 500; display: flex;">
         <p>© 2025 Your Company. All rights reserved.</p>
     </footer>
