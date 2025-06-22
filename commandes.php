@@ -1,122 +1,124 @@
 <?php
-require 'connect.php';
+$conn = mysqli_connect("localhost", "root", "", "ecommerce");
 
-// Supprimer une commande
-if (isset($_GET['delete'])) {
-    $commande_id = intval($_GET['delete']);
-
-    // Supprimer les détails de la commande
-    $deleteDetails = $conn->prepare("DELETE FROM details_commande WHERE commande_id = :commande_id");
-    $deleteDetails->bindParam(':commande_id', $commande_id, PDO::PARAM_INT);
-    $deleteDetails->execute();
-
-    // Supprimer la commande elle-même
-    $deleteCommande = $conn->prepare("DELETE FROM commandes WHERE id = :commande_id");
-    $deleteCommande->bindParam(':commande_id', $commande_id, PDO::PARAM_INT);
-    $deleteCommande->execute();
+if (!$conn) {
+    die("Connection failed: " . mysqli_connect_error());
 }
 
-// Récupérer toutes les commandes
-$sql = "SELECT * FROM commandes ORDER BY id DESC";
-$stmt = $conn->prepare($sql);
-$stmt->execute();
-$commandes = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$produit_id = isset($_GET['produit_id']) ? intval($_GET['produit_id']) : 0;
+$prix_unitaire = isset($_GET['prix']) ? floatval($_GET['prix']) : 0;
+
+if (isset($_POST['submit_commande'])) {
+    $nom = mysqli_real_escape_string($conn, $_POST['nom_client']);
+    $tel = mysqli_real_escape_string($conn, $_POST['telephone']);
+    $produit_id = intval($_POST['produit_id']);
+    $prix = floatval($_POST['prix_unitaire']);
+    $quantite = intval($_POST['quantite']);
+    $taille = mysqli_real_escape_string($conn, $_POST['taille']);
+
+    $total = $prix * $quantite;
+
+    $sql_commande = "INSERT INTO commandes (nom_client, telephone, mode_paiement, total_prix)
+                     VALUES ('$nom', '$tel', 'cash', $total)";
+
+    if (mysqli_query($conn, $sql_commande)) {
+        $commande_id = mysqli_insert_id($conn);
+        $sql_detail = "INSERT INTO details_commande (commande_id, produit_id, quantité, prix_unitaire)
+                       VALUES ($commande_id, $produit_id, $quantite, $prix)";
+
+        if (mysqli_query($conn, $sql_detail)) {
+            $whatsapp_message = urlencode("New Order:\nName: $nom\nPhone: $tel\nSize: $taille\nQuantity: $quantite\nTotal: $total MAD");
+            echo "<script>window.location.href='https://wa.me/212638417033?text=$whatsapp_message';</script>";
+        } else {
+            echo "<p style='color:red; text-align:center;'>❌ Error in details_commande: " . mysqli_error($conn) . "</p>";
+        }
+    } else {
+        echo "<p style='color:red; text-align:center;'>❌ Error in commandes: " . mysqli_error($conn) . "</p>";
+    }
+
+    mysqli_close($conn);
+}
 ?>
 
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Liste des Commandes</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            padding: 30px;
-        }
-
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            margin-top: 20px;
-        }
-
-        th, td {
-            border: 1px solid #999;
-            padding: 12px;
-            text-align: center;
-        }
-
-        th {
-            background-color: #f2f2f2;
-        }
-
-        a {
-            text-decoration: none;
-            color: #007BFF;
-        }
-
-        a:hover {
-            text-decoration: underline;
-        }
-
-        .btn-danger {
-            color: red;
-        }
-
-        img {
-            max-width: 100px;
-            max-height: 100px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Order Confirmation</title>
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      padding: 40px 20px;
+      background-color: #f9f9f9;
+    }
+    form {
+      max-width: 400px;
+      margin: auto;
+      background: #fff;
+      padding: 25px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    h2 {
+      text-align: center;
+      margin-bottom: 15px;
+      color: #333;
+    }
+    input[type="text"], input[type="number"], select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+    }
+    input[type="submit"] {
+      background-color: #333;
+      color: #fff;
+      padding: 12px;
+      border: none;
+      margin-top: 20px;
+      cursor: pointer;
+      border-radius: 6px;
+      width: 100%;
+      font-size: 16px;
+    }
+    input[type="submit"]:hover {
+      background-color: #444;
+    }
+  </style>
 </head>
 <body>
 
-<h1>Liste des Commandes</h1>
+  <form method="POST" action="commandes.php">
+    <h2>🛒 Confirm Your Order</h2>
 
-<?php if (count($commandes) > 0): ?>
-    <table>
-        <tr>
-            <th>ID</th>
-            <th>Date</th>
-            <th>Produit</th>
-            <th>Actions</th>
-        </tr>
+    <label>Full Name:</label>
+    
+    <input type="text" name="nom_client" required>
+    <br><br>
+    <label>Phone Number:</label>
+    
+    <input type="text" name="telephone" required>
+    <br><br>
+    <label>Size:</label>
+    
+    <select name="taille" required>
+      <option value="">Select a size</option>
+      <option value="M">M</option>
+      <option value="L">L</option>
+      <option value="XL">XL</option>
+      <option value="XXL">XXL</option>
+    </select>
+    <br><br>
+    <label>Quantity:</label>
+    
+    <input type="number" name="quantite" min="1" value="1" required>
 
-        <?php foreach ($commandes as $commande): ?>
-            <?php
-            // Récupérer l'image d’un produit lié à la commande
-            $imageStmt = $conn->prepare("
-                SELECT p.image_url 
-                FROM details_commande dc
-                JOIN produits p ON dc.produit_id = p.id
-                WHERE dc.commande_id = :commande_id
-                LIMIT 1
-            ");
-            $imageStmt->execute(['commande_id' => $commande['id']]);
-            $image = $imageStmt->fetch(PDO::FETCH_ASSOC);
-            ?>
-            <tr>
-                <td><?= htmlspecialchars($commande['id']) ?></td>
-                <td><?= htmlspecialchars($commande['date_commande']) ?></td>
-                <td>
-                    <?php if ($image): ?>
-                        <img src="<?= htmlspecialchars($image['image_url']) ?>" alt="Produit">
-                    <?php else: ?>
-                        Aucun produit
-                    <?php endif; ?>
-                </td>
-                <td>
-                    <a href="details_commandes.php?commande_id=<?= $commande['id'] ?>">View details</a> |
-                    <a class="btn-danger" href="commandes.php?delete=<?= $commande['id'] ?>"
-                       onclick="return confirm('Are you sure you want to delete this order?')">Delete</a>
-                </td>
-            </tr>
-        <?php endforeach; ?>
-    </table>
-<?php else: ?>
-    <p>Aucune commande trouvée.</p>
-<?php endif; ?>
+    <input type="hidden" name="produit_id" value="<?= $produit_id; ?>">
+    <input type="hidden" name="prix_unitaire" value="<?= $prix_unitaire; ?>">
+
+    <input type="submit" name="submit_commande" value="Confirm Order" >
+  </form>
 
 </body>
 </html>
