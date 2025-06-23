@@ -1,42 +1,55 @@
 <?php
-$conn = mysqli_connect("localhost", "root", "", "ecommerce");
-
-if (!$conn) {
-    die("Connection failed: " . mysqli_connect_error());
-}
+require 'connect.php';
 
 $produit_id = isset($_GET['produit_id']) ? intval($_GET['produit_id']) : 0;
 $prix_unitaire = isset($_GET['prix']) ? floatval($_GET['prix']) : 0;
 
-if (isset($_POST['submit_commande'])) {
-    $nom = mysqli_real_escape_string($conn, $_POST['nom_client']);
-    $tel = mysqli_real_escape_string($conn, $_POST['telephone']);
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_commande'])) {
+    $nom = trim($_POST['nom_client']);
+    $tel = trim($_POST['telephone']);
     $produit_id = intval($_POST['produit_id']);
     $prix = floatval($_POST['prix_unitaire']);
     $quantite = intval($_POST['quantite']);
-    $taille = mysqli_real_escape_string($conn, $_POST['taille']);
+    $taille = trim($_POST['taille']);
 
+    // Calcul du prix total de la commande
     $total = $prix * $quantite;
 
-    $sql_commande = "INSERT INTO commandes (nom_client, telephone, mode_paiement, total_prix)
-                     VALUES ('$nom', '$tel', 'cash', $total)";
+    try {
+        $conn->beginTransaction();
 
-    if (mysqli_query($conn, $sql_commande)) {
-        $commande_id = mysqli_insert_id($conn);
+        // Insérer les données dans la table des commandes
+        $sql_commande = "INSERT INTO commandes (nom_client, telephone, mode_paiement, total_prix)
+                         VALUES (:nom, :tel, 'cash', :total)";
+        $stmt = $conn->prepare($sql_commande);
+        $stmt->execute([
+            ':nom' => $nom,
+            ':tel' => $tel,
+            ':total' => $total
+        ]);
+
+        // Récupérer l'ID de la commande insérée
+        $commande_id = $conn->lastInsertId();
+
         $sql_detail = "INSERT INTO details_commande (commande_id, produit_id, quantité, prix_unitaire)
-                       VALUES ($commande_id, $produit_id, $quantite, $prix)";
+                       VALUES (:commande_id, :produit_id, :quantite, :prix)";
+        $stmt = $conn->prepare($sql_detail);
+        $stmt->execute([
+            ':commande_id' => $commande_id,
+            ':produit_id' => $produit_id,
+            ':quantite' => $quantite,
+            ':prix' => $prix
+        ]);
 
-        if (mysqli_query($conn, $sql_detail)) {
-            $whatsapp_message = urlencode("New Order:\nName: $nom\nPhone: $tel\nSize: $taille\nQuantity: $quantite\nTotal: $total MAD");
-            echo "<script>window.location.href='https://wa.me/212638417033?text=$whatsapp_message';</script>";
-        } else {
-            echo "<p style='color:red; text-align:center;'>❌ Error in details_commande: " . mysqli_error($conn) . "</p>";
-        }
-    } else {
-        echo "<p style='color:red; text-align:center;'>❌ Error in commandes: " . mysqli_error($conn) . "</p>";
+        $conn->commit();
+
+        // Préparer le message WhatsApp avec les infos de la commande
+        $whatsapp_message = urlencode("New Order:\nName: $nom\nPhone: $tel\nSize: $taille\nQuantity: $quantite\nTotal: $total MAD");
+        echo "<script>window.location.href='https://wa.me/212638417033?text=$whatsapp_message';</script>";
+    } catch (PDOException $e) {
+        $conn->rollBack();
+        echo "<p style='color:red; text-align:center;'>❌ Error: " . $e->getMessage() . "</p>";
     }
-
-    mysqli_close($conn);
 }
 ?>
 
@@ -48,8 +61,36 @@ if (isset($_POST['submit_commande'])) {
   <style>
     body {
       font-family: 'Poppins', sans-serif;
-      padding: 40px 20px;
       background-color: #f9f9f9;
+    }
+    header {
+      margin-bottom: 20px;
+      background-color: rgba(49, 48, 48, 0.7);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 10px 20px;
+      color: white;
+      flex-wrap: wrap;
+    }
+    .logo {
+      height: 50px;
+      cursor: pointer;
+    }
+    nav {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      flex-wrap: wrap;
+    }
+    .head {
+      color: white;
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s ease;
+    }
+    .head:hover {
+      color: #ccc;
     }
     form {
       max-width: 400px;
@@ -85,23 +126,38 @@ if (isset($_POST['submit_commande'])) {
     input[type="submit"]:hover {
       background-color: #444;
     }
+    footer {
+      margin-bottom: 40px;
+      height: 50px;
+      background-color: rgba(49, 48, 48, 0.7);
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+      font-weight: 500;
+    }
   </style>
 </head>
 <body>
+  <header>
+    <img src="img/Frame_1-removebg-preview.png" alt="Logo" class="logo" onclick="window.location.href='index.html'">
+    <nav>
+      <a href="index.html" class="head">Home</a>
+      <a href="about.html" class="head">About</a>
+      <a href="contact.html" class="head">Contact</a>
+    </nav>
+  </header>
 
   <form method="POST" action="commandes.php">
     <h2>🛒 Confirm Your Order</h2>
-
     <label>Full Name:</label>
-    
     <input type="text" name="nom_client" required>
     <br><br>
     <label>Phone Number:</label>
-    
     <input type="text" name="telephone" required>
     <br><br>
     <label>Size:</label>
-    
     <select name="taille" required>
       <option value="">Select a size</option>
       <option value="M">M</option>
@@ -111,14 +167,16 @@ if (isset($_POST['submit_commande'])) {
     </select>
     <br><br>
     <label>Quantity:</label>
-    
     <input type="number" name="quantite" min="1" value="1" required>
 
     <input type="hidden" name="produit_id" value="<?= $produit_id; ?>">
     <input type="hidden" name="prix_unitaire" value="<?= $prix_unitaire; ?>">
 
-    <input type="submit" name="submit_commande" value="Confirm Order" >
+    <input type="submit" name="submit_commande" value="Confirm Order">
   </form>
 
+  <footer>
+    <p>© 2025 Your Company. Tous droits réservés.</p>
+  </footer>
 </body>
 </html>
