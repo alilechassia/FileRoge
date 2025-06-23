@@ -56,12 +56,12 @@
     }
 
     h1 {
-      margin: 40px 20px 20px;
       color: #000000;
       font-size: 2rem;
     }
 
     .contact-container {
+      flex: 1;
       display: grid;
       grid-template-columns: repeat(2, 1fr);
       gap: 20px;
@@ -158,11 +158,6 @@
   <h1>Contact Us</h1>
   <div class="contact-container" id="contact-list"></div>
 
-  <!-- Footer -->
-  <footer>
-    <p>© 2025 MyElegence. All rights reserved.</p>
-  </footer>
-
   <!-- Script pour générer les contacts -->
   <script>
   // Liste des contacts à afficher avec leurs infos (nom, valeur, lien, icône)
@@ -199,6 +194,10 @@
     container.appendChild(card);
   });
 </script>
+
+ <footer>
+    <p>© 2025 Your Company. Tous droits réservés.</p>
+  </footer>
 
 </body>
 </html>
