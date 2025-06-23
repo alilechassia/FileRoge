@@ -1,40 +1,54 @@
 <?php
-// Rediriger automatiquement l'utilisateur après 5 secondes
-header("refresh:5;url=commandes.php");
+// Redirection automatique vers commandes.php
+header("refresh:2;url=details-commandes.php");
 ?>
 <!DOCTYPE html>
-<html dir="ltr" lang="fr">
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <title>Tableau de bord</title>
-    <meta http-equiv="refresh" content="5;url=commandes.php">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Poppins', sans-serif;
-        }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Dashboard - Redirecting</title>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      padding: 0;
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+    }
 
-        body {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
+    body {
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      background-color: #f4f4f4;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .container {
+      text-align: center;
+    }
+
+    h1 {
+      color: #333;
+      margin-bottom: 20px;
+    }
+
+    .loading {
+      color: #666;
+      font-size: 18px;
+    }
 
 
-        .redirect-msg {
-            margin-top: 100px;
-            text-align: center;
-            font-size: 18px;
-            color: #333;
-        }
-    </style>
+  </style>
 </head>
 <body>
 
-<div class="redirect-msg">
-    <p>Redirection vers la page des commandes en cours...</p>
-</div>
+  <div class="container">
+    <h1>Welcome to the Dashboard</h1>
+    <p class="loading">Redirecting to the orders page...</p>
+  </div>
+
 </body>
 </html>
