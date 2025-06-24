@@ -45,7 +45,7 @@ foreach ($commandes as $item) {
   <style>
     body {
       font-family: 'Poppins', sans-serif;
-      background-color: #f1f3f6;
+      background-color: #f9f9f9;;
       margin: 0;
       padding: 30px;
     }
