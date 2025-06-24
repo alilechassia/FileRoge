@@ -1,10 +1,11 @@
+
 <?php 
 require 'connect.php';
 
 $type_filter = isset($_GET['type']) ? trim($_GET['type']) : '';
 $search = isset($_GET['search']) ? trim($_GET['search']) : '';
 
-$sql = "SELECT * FROM produits WHERE genre = 'homme'";
+$sql = "SELECT * FROM produits WHERE genre = 'femme'";
 $params = [];
 
 // Filtre par nom
@@ -29,7 +30,7 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Men's Products</title>
+    <title>Women's Products</title>
     <style>
         * {
             margin: 0;
@@ -129,8 +130,8 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
 </head>
 <body>
 
-    <video autoplay muted loop class="background-video">
-        <source src="img/WhatsApp Video 2025-03-27 at 01.27.59.mp4" type="video/mp4" />
+     <video autoplay muted loop class="background-video">
+        <source src="img/background.mp4" type="video/mp4" />
     </video>
 
     <header>
@@ -142,27 +143,30 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
         </div>
     </header>
 
-    <form method="GET" action="homme.php" style="text-align:center; margin: 30px 0; position: relative; z-index: 10;">
-        <input type="text" name="search" placeholder="Search for productss..."
+    <form method="GET" action="femme.php" style="text-align:center; margin: 30px 0; position: relative; z-index: 10;">
+        <input type="text" name="search" placeholder="Search for products..."
             value="<?= htmlspecialchars($search); ?>"
             style="padding: 10px; width: 200px; border-radius: 8px; border: 1px solid #ccc;" />
 
-
         <select name="type" style="padding: 10px; border-radius: 8px; margin-left: 10px;">
-        <option value="">All types</option>
+        <option value="">All typess</option>
         <option value="T-shirt" <?= $type_filter == 'T-shirt' ? 'selected' : '' ?>>T-shirt</option>
         <option value="Jeans" <?= $type_filter == 'Jeans' ? 'selected' : '' ?>>Jeans</option>
-        <option value="Sweater" <?= $type_filter == 'Sweater' ? 'selected' : '' ?>>Sweater</option>
-        <option value="Shirt" <?= $type_filter == 'Shirt' ? 'selected' : '' ?>>Shirt</option>
-        <option value="Blazer" <?= $type_filter == 'Blazer' ? 'selected' : '' ?>>Blazer</option>
-        <option value="Vest" <?= $type_filter == 'Vest' ? 'selected' : '' ?>>Vest</option>
-        <option value="Coat" <?= $type_filter == 'Coat' ? 'selected' : '' ?>>Coat</option>
-        <option value="Pants" <?= $type_filter == 'Pants' ? 'selected' : '' ?>>Pantalon</option>
-        <option value="Jacket" <?= $type_filter == 'Jacket' ? 'selected' : '' ?>>Jacket</option>
-        <option value="Tracksuit" <?= $type_filter == 'Tracksuit' ? 'selected' : '' ?>>Tracksuit</option>
+        <option value="Sweatshirt" <?= $type_filter == 'Sweatshirt' ? 'selected' : '' ?>>Sweatshirt</option>
+        <option value="Coat" <?= $type_filter == 'Coat' ? 'selected' : '' ?>>Manteau</option>
+        <option value="Dress" <?= $type_filter == 'Dress' ? 'selected' : '' ?>>Robe</option>
+        <option value="Skirt" <?= $type_filter == 'Skirt' ? 'selected' : '' ?>>Jupe</option>
+        <option value="Blouse" <?= $type_filter == 'Blouse' ? 'selected' : '' ?>>Blouse</option>
+        <option value="Cardigan" <?= $type_filter == 'Cardigan' ? 'selected' : '' ?>>Cardigan</option>
         <option value="Hoodie" <?= $type_filter == 'Hoodie' ? 'selected' : '' ?>>Hoodie</option>
-        <option value="Parka" <?= $type_filter == 'Parka' ? 'selected' : '' ?>>Parka</option>
-        </select>
+        <option value="Dress" <?= $type_filter == 'Dress' ? 'selected' : '' ?>>Dress</option>
+        <option value="Kimono" <?= $type_filter == 'Kimono' ? 'selected' : '' ?>>Kimono</option>
+        <option value="Pants" <?= $type_filter == 'Pants' ? 'selected' : '' ?>>Pants</option>
+        <option value="Jumpsuit" <?= $type_filter == 'Jumpsuit' ? 'selected' : '' ?>>Jumpsuit</option>
+        <option value="Tunic" <?= $type_filter == 'Tunic' ? 'selected' : '' ?>>Tunic</option>
+        <option value="Jacket" <?= $type_filter == 'Jacket' ? 'selected' : '' ?>>Jacket</option>
+       
+    </select>
 
 
         <button type="submit" style="padding: 10px 20px; border: none; border-radius: 8px; background-color: #333; color: white;">
@@ -196,7 +200,6 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
                     <a href="commandes.php?produit_id=<?= htmlspecialchars($row['id']) ?>&prix=<?= htmlspecialchars($row['prix']) ?>" class="order-button">
                         Buy now
                     </a>
-
                 </div>
         <?php
             endforeach;
