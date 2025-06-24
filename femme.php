@@ -1,9 +1,9 @@
+
 <?php 
 require 'connect.php';
 
+$type_filter = isset($_GET['type']) ? trim($_GET['type']) : '';
 $search = isset($_GET['search']) ? trim($_GET['search']) : '';
-$size = isset($_GET['taille']) ? trim($_GET['taille']) : '';
-$price_filter = isset($_GET['prix_filter']) ? trim($_GET['prix_filter']) : '';
 
 $sql = "SELECT * FROM produits WHERE genre = 'femme'";
 $params = [];
@@ -14,18 +14,12 @@ if (!empty($search)) {
     $params['search'] = '%' . $search . '%';
 }
 
-// Filtre par taille
-if (!empty($size)) {
-    $sql .= " AND FIND_IN_SET(:taille, REPLACE(taille, ' ', ''))";
-    $params['taille'] = $size;
+// Filtre par type
+if (!empty($type_filter)) {
+    $sql .= " AND nom LIKE :type";
+    $params['type'] = '%' . $type_filter . '%';
 }
 
-// Filtre par prix
-if ($price_filter === 'moins_100') {
-    $sql .= " AND prix < 100";
-} elseif ($price_filter === 'plus_100') {
-    $sql .= " AND prix >= 100";
-}
 
 $stmt = $conn->prepare($sql);
 $stmt->execute($params);
@@ -154,18 +148,26 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
             value="<?= htmlspecialchars($search); ?>"
             style="padding: 10px; width: 200px; border-radius: 8px; border: 1px solid #ccc;" />
 
-        <select name="taille" style="padding: 10px; border-radius: 8px; margin-left: 10px;">
-            <option value="">Toutes les tailles</option>
-            <option value="L" <?= $size == 'L' ? 'selected' : '' ?>>L</option>
-            <option value="XL" <?= $size == 'XL' ? 'selected' : '' ?>>XL</option>
-            <option value="XXL" <?= $size == 'XXL' ? 'selected' : '' ?>>XXL</option>
-        </select>
+        <select name="type" style="padding: 10px; border-radius: 8px; margin-left: 10px;">
+        <option value="">Tous les types</option>
+        <option value="T-shirt" <?= $type_filter == 'T-shirt' ? 'selected' : '' ?>>T-shirt</option>
+        <option value="Jeans" <?= $type_filter == 'Jeans' ? 'selected' : '' ?>>Jeans</option>
+        <option value="Sweatshirt" <?= $type_filter == 'Sweatshirt' ? 'selected' : '' ?>>Sweatshirt</option>
+        <option value="Coat" <?= $type_filter == 'Coat' ? 'selected' : '' ?>>Manteau</option>
+        <option value="Dress" <?= $type_filter == 'Dress' ? 'selected' : '' ?>>Robe</option>
+        <option value="Skirt" <?= $type_filter == 'Skirt' ? 'selected' : '' ?>>Jupe</option>
+        <option value="Blouse" <?= $type_filter == 'Blouse' ? 'selected' : '' ?>>Blouse</option>
+        <option value="Cardigan" <?= $type_filter == 'Cardigan' ? 'selected' : '' ?>>Cardigan</option>
+        <option value="Hoodie" <?= $type_filter == 'Hoodie' ? 'selected' : '' ?>>Hoodie</option>
+        <option value="Dress" <?= $type_filter == 'Dress' ? 'selected' : '' ?>>Dress</option>
+        <option value="Kimono" <?= $type_filter == 'Kimono' ? 'selected' : '' ?>>Kimono</option>
+        <option value="Pants" <?= $type_filter == 'Pants' ? 'selected' : '' ?>>Pants</option>
+        <option value="Jumpsuit" <?= $type_filter == 'Jumpsuit' ? 'selected' : '' ?>>Jumpsuit</option>
+        <option value="Tunic" <?= $type_filter == 'Tunic' ? 'selected' : '' ?>>Tunic</option>
+        <option value="Jacket" <?= $type_filter == 'Jacket' ? 'selected' : '' ?>>Jacket</option>
+       
+    </select>
 
-        <select name="prix_filter" style="padding: 10px; border-radius: 8px; margin-left: 10px;">
-            <option value="">Tous les prix</option>
-            <option value="moins_100" <?= $price_filter == 'moins_100' ? 'selected' : '' ?>>Prix < 100 MAD</option>
-            <option value="plus_100" <?= $price_filter == 'plus_100' ? 'selected' : '' ?>>Prix ≥ 100 MAD</option>
-        </select>
 
         <button type="submit" style="padding: 10px 20px; border: none; border-radius: 8px; background-color: #333; color: white;">
             Filtrer
