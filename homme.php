@@ -143,13 +143,13 @@ $products = $stmt->fetchAll(PDO::FETCH_ASSOC);
     </header>
 
     <form method="GET" action="homme.php" style="text-align:center; margin: 30px 0; position: relative; z-index: 10;">
-        <input type="text" name="search" placeholder="Rechercher des produits..."
+        <input type="text" name="search" placeholder="Search for productss..."
             value="<?= htmlspecialchars($search); ?>"
             style="padding: 10px; width: 200px; border-radius: 8px; border: 1px solid #ccc;" />
 
 
         <select name="type" style="padding: 10px; border-radius: 8px; margin-left: 10px;">
-        <option value="">Tous les types</option>
+        <option value="">All types</option>
         <option value="T-shirt" <?= $type_filter == 'T-shirt' ? 'selected' : '' ?>>T-shirt</option>
         <option value="Jeans" <?= $type_filter == 'Jeans' ? 'selected' : '' ?>>Jeans</option>
         <option value="Sweater" <?= $type_filter == 'Sweater' ? 'selected' : '' ?>>Sweater</option>
