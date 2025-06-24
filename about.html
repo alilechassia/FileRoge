@@ -12,7 +12,7 @@
   <style>
     body {
       font-family: 'Poppins', sans-serif;
-      background-color: #fff;
+      background-color: #f9f9f9;
       color: #333;
       margin: 0;
       padding: 0;
@@ -134,6 +134,58 @@
       font-weight: 500;
       margin-top: -20px;
     }
+    @media screen and (max-width: 768px) {
+      header {
+        flex-direction: column;
+        align-items: flex-start;
+        padding: 15px;
+      }
+
+      .logo {
+        height: 40px;
+        margin-bottom: 10px;
+      }
+
+      nav {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+      }
+
+      .about-container {
+        margin: 30px 10px;
+        padding: 10px;
+      }
+
+      p {
+        font-size: 1rem;
+        text-align: left;
+      }
+
+      h1 {
+        font-size: 1.5rem;
+      }
+
+      #products h2 {
+        font-size: 1.5rem;
+      }
+
+      .product-grid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 15px;
+        padding: 0 10px;
+      }
+
+      .product-grid img {
+        height: 180px;
+      }
+
+      footer {
+        font-size: 12px;
+        padding: 10px;
+      }
+    }
+
   </style>
 </head>
 <body>
@@ -151,7 +203,6 @@
 
   <div class="about-container">
 
-    <!-- Titre -->
   <h1>About Us</h1>
 
    <!-- Texte avec liens vers femme.php et homme.php -->
@@ -163,9 +214,11 @@
   </p>
 
   <p>
-    Our goal is simple: to offer you a carefully curated selection of clothing, with easy navigation, a clean design, and quick ordering via 
-    <span class="highlight">call</span> or <span class="highlight">messaging</span>.
-  </p>
+  Our goal is simple: to offer you a carefully curated selection of clothing, with easy navigation, a clean design, and quick ordering via 
+  <a href="tel:+212638417033" class="highlight" style="text-decoration: none;">call</a> or 
+  <a href="https://www.instagram.com/assia__alilech_09/" class="highlight" style="text-decoration: none;" target="_blank">messaging</a>.
+</p>
+
 
   <p>
     We believe in fashion that is 
